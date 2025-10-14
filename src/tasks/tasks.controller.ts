@@ -2,9 +2,9 @@ import { Controller, UseGuards, Post, Body, Get, Query, Delete, Param, Patch } f
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '../auth/get-user.decorator';
 import { User } from '../auth/user.entity';
-import { GetTasksFilterDto } from '../auth/dto/get-tasks-filter.dto';
-import { UpdateTaskStatusDto } from 'src/auth/dto/update-task-status.dto';
-import { CreateTaskDto } from 'src/auth/dto/create-task.dto';
+import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
+import { UpdateTaskStatusDto } from './dto/update-task-status.dto';
+import { CreateTaskDto } from './dto/create-task.dto';
 import { TasksService } from './tasks.service';
 import { TaskStatus } from './task.entity';
 import { Task } from './task.entity'
