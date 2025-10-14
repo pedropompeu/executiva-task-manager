@@ -1,9 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Task } from './task.entity';
+import { Task, TaskStatus } from './task.entity';
 import { CreateTaskDto } from 'src/auth/dto/create-task.dto';
 import { User } from 'src/auth/user.entity';
+import { GetTasksFilterDto } from 'src/auth/dto/get-tasks-filter.dto';
+
 
 @Injectable()
 export class TasksService {
@@ -18,11 +20,31 @@ export class TasksService {
     const task = this.tasksRepository.create({
       titulo,
       descricao,
-      user, 
+      user,
     });
 
     await this.tasksRepository.save(task);
-    
     return task;
+  }
+
+  async getTasks(filterDto: GetTasksFilterDto, user: User): Promise<Task[]> {
+    const { status, search } = filterDto;
+    const query = this.tasksRepository.createQueryBuilder('task');
+
+    query.where('task.userId = :userId', { userId: user.id });
+
+    if (status) {
+      query.andWhere('task.status = :status', { status });
+    }
+
+    if (search) {
+      query.andWhere(
+        '(LOWER(task.titulo) LIKE LOWER(:search) OR LOWER(task.descricao) LIKE LOWER(:search))',
+        { search: `%${search}%` },
+      );
+    }
+
+    const tasks = await query.getMany();
+    return tasks;
   }
 }
