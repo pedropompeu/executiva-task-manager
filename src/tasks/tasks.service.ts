@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Task, TaskStatus } from './task.entity';
@@ -25,6 +25,12 @@ export class TasksService {
 
     await this.tasksRepository.save(task);
     return task;
+  }
+  async deleteTask(id: string, user: User): Promise<void> {
+    const result = await this.tasksRepository.delete({ id, user });
+    if (result.affected === 0) {
+      throw new NotFoundException(`Tarefa com ID "${id}" não encontrada.`);
+    }
   }
 
   async getTasks(filterDto: GetTasksFilterDto, user: User): Promise<Task[]> {

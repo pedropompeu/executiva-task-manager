@@ -1,4 +1,4 @@
-import { Controller, UseGuards, Post, Body, Get, Query } from '@nestjs/common';
+import { Controller, UseGuards, Post, Body, Get, Query, Delete, Param } from '@nestjs/common'; 
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '../auth/get-user.decorator';
 import { User } from '../auth/user.entity';
@@ -26,6 +26,10 @@ export class TasksController {
   ): Promise<Task[]> {
     return this.tasksService.getTasks(filterDto, user);
   }
+  @Delete('/:id')
+  deleteTask(@Param('id') id: string, @GetUser() user: User): Promise<void> {
+    return this.tasksService.deleteTask(id, user);
+    }
 }
 
 
