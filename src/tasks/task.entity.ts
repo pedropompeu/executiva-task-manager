@@ -29,7 +29,7 @@ export class Task {
   dataCriacao: Date;
 
   @Column({ name: 'data_conclusao', type: 'datetime', nullable: true })
-  dataConclusao: Date;
+  dataConclusao: Date | null;
 
   @ManyToOne(() => User, user => user.tasks, { eager: false })
   user: User;

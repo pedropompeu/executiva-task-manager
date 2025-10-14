@@ -20,17 +20,11 @@ export class TasksService {
     const task = this.tasksRepository.create({
       titulo,
       descricao,
-      user,
+      user, 
     });
 
     await this.tasksRepository.save(task);
     return task;
-  }
-  async deleteTask(id: string, user: User): Promise<void> {
-    const result = await this.tasksRepository.delete({ id, user });
-    if (result.affected === 0) {
-      throw new NotFoundException(`Tarefa com ID "${id}" não encontrada.`);
-    }
   }
 
   async getTasks(filterDto: GetTasksFilterDto, user: User): Promise<Task[]> {
@@ -52,5 +46,44 @@ export class TasksService {
 
     const tasks = await query.getMany();
     return tasks;
+  }
+
+  async getTaskById(id: string, user: User): Promise<Task> {
+    const found = await this.tasksRepository.findOne({ where: { id, user } });
+
+    if (!found) {
+      throw new NotFoundException(`Tarefa com o ID "${id}" não encontrada.`);
+    }
+
+    return found;
+  }
+  
+  async updateTaskStatus(
+    id: string,
+    status: TaskStatus,
+    user: User,
+  ): Promise<Task> {
+    const task = await this.getTaskById(id, user);
+
+    task.status = status;
+
+    if (status === TaskStatus.DONE) {
+      task.dataConclusao = new Date();
+    } else {
+      task.dataConclusao = null;
+    }
+
+    await this.tasksRepository.save(task);
+
+    return task;
+  }
+
+ 
+  async deleteTask(id: string, user: User): Promise<void> {
+    const result = await this.tasksRepository.delete({ id, user });
+
+    if (result.affected === 0) {
+      throw new NotFoundException(`Tarefa com o ID "${id}" não encontrada.`);
+    }
   }
 }
