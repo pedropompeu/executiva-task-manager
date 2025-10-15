@@ -19,14 +19,21 @@ const passport_jwt_1 = require("passport-jwt");
 const typeorm_1 = require("@nestjs/typeorm");
 const user_entity_1 = require("./user.entity");
 const typeorm_2 = require("typeorm");
+const config_1 = require("@nestjs/config");
 let JwtStrategy = class JwtStrategy extends (0, passport_1.PassportStrategy)(passport_jwt_1.Strategy) {
     userRepository;
-    constructor(userRepository) {
+    configService;
+    constructor(userRepository, configService) {
+        const secret = configService.get('JWT_SECRET');
+        if (!secret) {
+            throw new Error('Chave secreta JWT não encontrada. Verifique o arquivo .env');
+        }
         super({
-            secretOrKey: 'Admin@123',
+            secretOrKey: secret,
             jwtFromRequest: passport_jwt_1.ExtractJwt.fromAuthHeaderAsBearerToken(),
         });
         this.userRepository = userRepository;
+        this.configService = configService;
     }
     async validate(payload) {
         const { sub: id } = payload;
@@ -41,6 +48,7 @@ exports.JwtStrategy = JwtStrategy;
 exports.JwtStrategy = JwtStrategy = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(user_entity_1.User)),
-    __metadata("design:paramtypes", [typeorm_2.Repository])
+    __metadata("design:paramtypes", [typeorm_2.Repository,
+        config_1.ConfigService])
 ], JwtStrategy);
 //# sourceMappingURL=Jwt.strategy.js.map
