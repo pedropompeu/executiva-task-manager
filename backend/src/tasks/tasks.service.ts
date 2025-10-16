@@ -18,13 +18,17 @@ export class TasksService {
   async createTask(createTaskDto: CreateTaskDto, user: User): Promise<Task> {
     const { titulo, descricao } = createTaskDto;
 
-    const count = await this.tasksRepository.count({ where: { user: { id: user.id } } });
+    const highestOrderTask = await this.tasksRepository.findOne({
+    where: { user: { id: user.id } },
+    order: { order: 'DESC' },
+  });
+    const newOrder = highestOrderTask ? highestOrderTask.order + 1 : 0;
 
     const task = this.tasksRepository.create({
       titulo,
       descricao,
       user,
-      order: count,
+      order: newOrder,
     });
 
     await this.tasksRepository.save(task);

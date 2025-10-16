@@ -70,54 +70,50 @@ export const DashboardPage = () => {
     });
   }, [tasks]);
 
-  const onDragEnd = (result: DropResult) => {
-    if (!result.destination) return;
-    const { source, destination } = result;
+  const onDragEnd = async (result: DropResult) => {
+  if (!result.destination) return;
+  const { source, destination } = result;
 
-    if (source.droppableId !== destination.droppableId) {
-      const sourceColumn = columns[source.droppableId];
-      const destColumn = columns[destination.droppableId];
-      const sourceItems = [...sourceColumn.items];
-      const destItems = [...destColumn.items];
-      const [removed] = sourceItems.splice(source.index, 1);
-      destItems.splice(destination.index, 0, removed);
+  const newColumns = { ...columns };
+  const sourceColumn = newColumns[source.droppableId];
+  const destColumn = newColumns[destination.droppableId];
+  const sourceItems = [...sourceColumn.items];
+  const destItems = [...destColumn.items];
+  const [removed] = sourceItems.splice(source.index, 1);
 
-      const newStatus = destination.droppableId as Task['status'];
-      handleStatusChange(removed.id, newStatus);
+  if (source.droppableId !== destination.droppableId) {
+    const newStatus = destination.droppableId as Task['status'];
+    removed.status = newStatus;
+    destItems.splice(destination.index, 0, removed);
 
-      setColumns({
-        ...columns,
-        [source.droppableId]: {
-          ...sourceColumn,
-          items: sourceItems,
-        },
-        [destination.droppableId]: {
-          ...destColumn,
-          items: destItems,
-        },
-      });
-    } else {
-      const column = columns[source.droppableId];
-      const copiedItems = [...column.items];
-      const [removed] = copiedItems.splice(source.index, 1);
-      copiedItems.splice(destination.index, 0, removed);
+    setColumns({
+      ...newColumns,
+      [source.droppableId]: { ...sourceColumn, items: sourceItems },
+      [destination.droppableId]: { ...destColumn, items: destItems },
+    });
 
-      const updatedTasks = copiedItems.map((item, index) => ({
-        id: item.id,
-        order: index,
-      }));
+    await api.patch(`/tasks/${removed.id}/status`, { status: newStatus });
 
-      api.post('/tasks/order', updatedTasks);
+  } else {
+    destItems.splice(destination.index, 0, removed);
 
-      setColumns({
-        ...columns,
-        [source.droppableId]: {
-          ...column,
-          items: copiedItems,
-        },
-      });
-    }
-  };
+    setColumns({
+      ...newColumns,
+      [destination.droppableId]: { ...destColumn, items: destItems },
+    });
+  }
+
+  const allTasks = Object.values(newColumns).flatMap(col => col.items);
+  const tasksWithNewOrder = allTasks.map((task, index) => ({
+    ...task,
+    order: index,
+  }));
+  
+  setTasks(tasksWithNewOrder.sort((a, b) => a.order - b.order));
+
+  const orderPayload = tasksWithNewOrder.map(t => ({ id: t.id, order: t.order }));
+  await api.post('/tasks/order', orderPayload);
+};
 
   const handleCreateTask = async (e: React.FormEvent) => {
     e.preventDefault();
