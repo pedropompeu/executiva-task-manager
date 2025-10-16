@@ -2,7 +2,23 @@
 
 Bem-vindo ao repositório do Executiva Task Manager, uma aplicação full stack para gerenciamento de tarefas.
 
-Este projeto consiste em um backend construído com **NestJS** e um frontend com **React**, demonstrando um fluxo completo de autenticação de usuário e operações de CRUD (Criar, Ler, Atualizar, Excluir) para tarefas.
+Uma aplicação full-stack moderna para gerenciamento de tarefas, construída com as melhores práticas de desenvolvimento para garantir uma experiência de usuário fluida e um código escalável.
+
+Este projeto demonstra um fluxo completo de autenticação de usuário (JWT) e operações CRUD em um sistema de colunas interativo com funcionalidade de arrastar e soltar.
+
+---
+
+## ✨ Features
+
+-   **Autenticação de Usuário:** Sistema seguro de cadastro e login com JSON Web Tokens (JWT).
+-   **Gerenciamento de Tarefas (CRUD):** Crie, visualize, edite e exclua suas tarefas de forma intuitiva.
+-   **Layout de Colunas (Kanban):** Organize tarefas em três colunas: **Pendente**, **Em Andamento** e **Concluída**.
+-   **Arrastar e Soltar (Drag-and-Drop):** Mova e reordene tarefas entre as colunas com uma interface interativa.
+-   **Persistência de Ordem:** A ordem das suas tarefas é salva no banco de dados, mantendo a organização entre sessões.
+-   **Modais para Ações:** A criação e edição de tarefas ocorrem em modais, mantendo a interface limpa.
+-   **Design Responsivo:** Interface construída com TailwindCSS para uma ótima experiência em qualquer dispositivo.
+
+---
 
 ## 🚀 Estrutura e Instruções
 
