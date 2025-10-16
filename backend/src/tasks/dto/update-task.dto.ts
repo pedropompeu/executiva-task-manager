@@ -1,5 +1,5 @@
-import { IsOptional, IsString, MaxLength } from 'class-validator';
-
+import { IsEnum, IsOptional, IsString, MaxLength } from 'class-validator';
+import { TaskStatus } from '../task.entity'; 
 export class UpdateTaskDto {
   @IsOptional()
   @IsString()
@@ -10,4 +10,8 @@ export class UpdateTaskDto {
   @IsString()
   @MaxLength(280, { message: 'A descrição deve ter no máximo 280 caracteres.' })
   descricao?: string;
+
+  @IsOptional()
+  @IsEnum(TaskStatus) 
+  status?: TaskStatus;
 }

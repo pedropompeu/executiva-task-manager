@@ -54,6 +54,10 @@ export class TasksService {
     
     Object.assign(task, updateTaskDto);
 
+    if (updateTaskDto.status) {
+      task.dataConclusao = updateTaskDto.status === 'CONCLUÍDA' ? new Date() : null;
+    }
+
     await this.tasksRepository.save(task);
     return task;
   }

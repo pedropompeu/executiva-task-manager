@@ -1,12 +1,9 @@
-// frontend/src/pages/DashboardPage.tsx
-
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import { TaskModal } from '../components/TaskModal';
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
 
-// Tipos
 type TaskStatus = 'PENDENTE' | 'EM ANDAMENTO' | 'CONCLUÍDA';
 
 interface Task {
@@ -40,12 +37,10 @@ export const DashboardPage = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
-  // Estados para o formulário do modal
   const [titulo, setTitulo] = useState('');
   const [descricao, setDescricao] = useState('');
-  const [status, setStatus] = useState<TaskStatus>('PENDENTE'); // Estado para o status no modal
+  const [status, setStatus] = useState<TaskStatus>('PENDENTE');
 
-  // Lógica de fetch e onDragEnd (sem alterações)
   useEffect(() => {
     const fetchTasks = async () => {
       const token = localStorage.getItem('accessToken');
@@ -82,17 +77,19 @@ export const DashboardPage = () => {
       const newStatus = destination.droppableId as Task['status'];
       removed.status = newStatus;
       destItems.splice(destination.index, 0, removed);
+
       newColumns[source.droppableId] = { ...sourceColumn, items: sourceItems };
       newColumns[destination.droppableId] = { ...destColumn, items: destItems };
       
-      api.patch(`/tasks/${removed.id}/status`, { status: newStatus });
+      api.patch(`/tasks/${removed.id}`, { status: newStatus });
+
     } else {
       destItems.splice(destination.index, 0, removed);
       newColumns[destination.droppableId] = { ...destColumn, items: destItems };
     }
 
     const allTasks = Object.values(newColumns).flatMap(col => col.items);
-    const tasksWithNewOrder = allTasks.map((task, index) => ({ ...task, order: index, }));
+    const tasksWithNewOrder = allTasks.map((task, index) => ({ ...task, order: index }));
 
     setTasks(tasksWithNewOrder);
 
@@ -100,7 +97,6 @@ export const DashboardPage = () => {
     await api.post('/tasks/order', orderPayload);
   };
 
-  // Funções de manipulação do modal (com alterações)
   const openCreateModal = () => {
     setTitulo('');
     setDescricao('');
@@ -112,7 +108,7 @@ export const DashboardPage = () => {
     setSelectedTask(task);
     setTitulo(task.titulo);
     setDescricao(task.descricao);
-    setStatus(task.status); // Carrega o status atual da tarefa
+    setStatus(task.status);
     setIsEditModalOpen(true);
   };
 
@@ -120,7 +116,6 @@ export const DashboardPage = () => {
     setIsCreateModalOpen(false);
     setIsEditModalOpen(false);
     setSelectedTask(null);
-    // Limpa os campos
     setTitulo('');
     setDescricao('');
     setStatus('PENDENTE');
@@ -165,7 +160,6 @@ export const DashboardPage = () => {
     navigate('/login');
   };
   
-  // Renderização
   if (loading) {
     return <div className="min-h-screen bg-slate-100 text-slate-600 flex justify-center items-center">Carregando...</div>;
   }
@@ -231,7 +225,6 @@ export const DashboardPage = () => {
         </DragDropContext>
       </main>
 
-      {/* Modais */}
       <TaskModal
         isOpen={isCreateModalOpen}
         onClose={closeModal}

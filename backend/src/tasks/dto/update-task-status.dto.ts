@@ -1,7 +1,7 @@
 import { IsEnum, IsOptional, IsString } from 'class-validator';
 import { TaskStatus } from '../task.entity';
 
-export class UpdateTaskStatusDto {
+export class UpdateTaskDto {
   @IsOptional()
   @IsString()
   titulo?: string;
