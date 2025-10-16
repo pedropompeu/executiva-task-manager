@@ -31,12 +31,12 @@ export const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-900 flex flex-col justify-center items-center">
-      <div className="bg-slate-800 p-8 rounded-lg shadow-lg w-full max-w-md">
-        <h2 className="text-2xl font-bold text-white text-center mb-6">Login</h2>
+    <div className="min-h-screen bg-white flex flex-col justify-center items-center">
+      <div className="bg-gray-200 p-8 rounded-lg shadow-lg w-full max-w-md">
+        <h2 className="text-2xl font-bold text-black text-center mb-6">Login</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-gray-400 text-sm font-bold mb-2" htmlFor="email">
+            <label className="block text-gray-500 text-sm font-bold mb-2" htmlFor="email">
               Email
             </label>
             <input
@@ -44,12 +44,12 @@ export const LoginPage = () => {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="shadow appearance-none border rounded w-full py-2 px-3 bg-slate-700 text-white leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow appearance-none border rounded w-full py-2 px-3 bg-white text-black leading-tight focus:outline-none focus:shadow-outline"
               required
             />
           </div>
           <div className="mb-6">
-            <label className="block text-gray-400 text-sm font-bold mb-2" htmlFor="password">
+            <label className="block text-gray-500 text-sm font-bold mb-2" htmlFor="password">
               Senha
             </label>
             <input
@@ -57,7 +57,7 @@ export const LoginPage = () => {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="shadow appearance-none border rounded w-full py-2 px-3 bg-slate-700 text-white mb-3 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow appearance-none border rounded w-full py-2 px-3 bg-white text-black mb-3 leading-tight focus:outline-none focus:shadow-outline"
               required
             />
           </div>
@@ -67,7 +67,7 @@ export const LoginPage = () => {
           <div className="flex items-center justify-between">
             <button
               type="submit"
-              className="bg-sky-500 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
             >
               Entrar
             </button>
@@ -76,7 +76,7 @@ export const LoginPage = () => {
 
         <p className="text-center text-gray-500 text-sm mt-6">
           Não tem uma conta?{' '}
-          <Link to="/register" className="text-sky-400 hover:text-sky-600">
+          <Link to="/register" className="text-blue-500 hover:text-blue-700">
             Crie uma agora
           </Link>
         </p>

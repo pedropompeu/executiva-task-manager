@@ -5,6 +5,7 @@ import { Task, TaskStatus } from './task.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 import { User } from 'src/auth/user.entity';
+import { UpdateTaskDto } from './dto/update-task.dto';
 
 
 @Injectable()
@@ -17,10 +18,13 @@ export class TasksService {
   async createTask(createTaskDto: CreateTaskDto, user: User): Promise<Task> {
     const { titulo, descricao } = createTaskDto;
 
+    const count = await this.tasksRepository.count({ where: { user: { id: user.id } } });
+
     const task = this.tasksRepository.create({
       titulo,
       descricao,
-      user, 
+      user,
+      order: count,
     });
 
     await this.tasksRepository.save(task);
@@ -79,6 +83,34 @@ export class TasksService {
   }
 
  
+  async updateTask(
+    id: string,
+    updateTaskDto: UpdateTaskDto,
+    user: User,
+  ): Promise<Task> {
+    const task = await this.getTaskById(id, user);
+
+    const { titulo, descricao } = updateTaskDto;
+
+    if (titulo) {
+      task.titulo = titulo;
+    }
+
+    if (descricao) {
+      task.descricao = descricao;
+    }
+
+    await this.tasksRepository.save(task);
+
+    return task;
+  }
+
+  async updateTaskOrder(tasks: { id: string; order: number }[], user: User): Promise<void> {
+    for (const task of tasks) {
+      await this.tasksRepository.update({ id: task.id, user: { id: user.id } }, { order: task.order });
+    }
+  }
+
   async deleteTask(id: string, user: User): Promise<void> {
     const result = await this.tasksRepository.delete({ id, user });
 

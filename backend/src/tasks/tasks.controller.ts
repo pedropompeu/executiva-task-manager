@@ -8,6 +8,7 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { TasksService } from './tasks.service';
 import { TaskStatus } from './task.entity';
 import { Task } from './task.entity'
+import { UpdateTaskDto } from './dto/update-task.dto';
 
 @Controller('tasks')
 @UseGuards(AuthGuard())
@@ -32,7 +33,16 @@ export class TasksController {
   deleteTask(@Param('id') id: string, @GetUser() user: User): Promise<void> {
     return this.tasksService.deleteTask(id, user);
     }
-    @Patch('/:id/status')
+    @Patch('/:id')
+  updateTask(
+    @Param('id') id: string,
+    @Body() updateTaskDto: UpdateTaskDto,
+    @GetUser() user: User,
+  ): Promise<Task> {
+    return this.tasksService.updateTask(id, updateTaskDto, user);
+  }
+
+  @Patch('/:id/status')
   updateTaskStatus(
     @Param('id') id: string,
     @Body() updateTaskStatusDto: UpdateTaskStatusDto,
@@ -40,6 +50,14 @@ export class TasksController {
   ) {
     const { status } = updateTaskStatusDto;
     return this.tasksService.updateTaskStatus(id, status, user);
+  }
+
+  @Post('/order')
+  updateTaskOrder(
+    @Body() tasks: { id: string; order: number }[],
+    @GetUser() user: User,
+  ): Promise<void> {
+    return this.tasksService.updateTaskOrder(tasks, user);
   }
 }
 

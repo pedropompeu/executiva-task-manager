@@ -25,6 +25,7 @@ let Task = class Task {
     status;
     dataCriacao;
     dataConclusao;
+    order;
     user;
 };
 exports.Task = Task;
@@ -56,6 +57,10 @@ __decorate([
     (0, typeorm_1.Column)({ name: 'data_conclusao', type: 'datetime', nullable: true }),
     __metadata("design:type", Object)
 ], Task.prototype, "dataConclusao", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'int', nullable: true }),
+    __metadata("design:type", Number)
+], Task.prototype, "order", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => user_entity_1.User, user => user.tasks, { eager: false }),
     __metadata("design:type", user_entity_1.User)

@@ -1,9 +1,5 @@
-// src/auth/user.entity.ts
-
 import { Exclude } from 'class-transformer';
-// Adicione OneToMany aqui
 import { Entity, PrimaryGeneratedColumn, Column, Unique, OneToMany } from 'typeorm'; 
-// Importe a entidade Task
 import { Task } from '../tasks/task.entity'; 
 
 @Entity({ name: 'users' })

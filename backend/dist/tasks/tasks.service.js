@@ -24,10 +24,12 @@ let TasksService = class TasksService {
     }
     async createTask(createTaskDto, user) {
         const { titulo, descricao } = createTaskDto;
+        const count = await this.tasksRepository.count({ where: { user: { id: user.id } } });
         const task = this.tasksRepository.create({
             titulo,
             descricao,
             user,
+            order: count,
         });
         await this.tasksRepository.save(task);
         return task;
@@ -63,6 +65,23 @@ let TasksService = class TasksService {
         }
         await this.tasksRepository.save(task);
         return task;
+    }
+    async updateTask(id, updateTaskDto, user) {
+        const task = await this.getTaskById(id, user);
+        const { titulo, descricao } = updateTaskDto;
+        if (titulo) {
+            task.titulo = titulo;
+        }
+        if (descricao) {
+            task.descricao = descricao;
+        }
+        await this.tasksRepository.save(task);
+        return task;
+    }
+    async updateTaskOrder(tasks, user) {
+        for (const task of tasks) {
+            await this.tasksRepository.update({ id: task.id, user: { id: user.id } }, { order: task.order });
+        }
     }
     async deleteTask(id, user) {
         const result = await this.tasksRepository.delete({ id, user });

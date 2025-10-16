@@ -31,6 +31,9 @@ export class Task {
   @Column({ name: 'data_conclusao', type: 'datetime', nullable: true })
   dataConclusao: Date | null;
 
+  @Column({ type: 'int', nullable: true })
+  order: number;
+
   @ManyToOne(() => User, user => user.tasks, { eager: false })
   user: User;
 }

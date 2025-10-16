@@ -11,5 +11,6 @@ export declare class Task {
     status: TaskStatus;
     dataCriacao: Date;
     dataConclusao: Date | null;
+    order: number;
     user: User;
 }

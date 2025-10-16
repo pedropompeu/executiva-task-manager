@@ -21,6 +21,7 @@ const get_tasks_filter_dto_1 = require("./dto/get-tasks-filter.dto");
 const update_task_status_dto_1 = require("./dto/update-task-status.dto");
 const create_task_dto_1 = require("./dto/create-task.dto");
 const tasks_service_1 = require("./tasks.service");
+const update_task_dto_1 = require("./dto/update-task.dto");
 let TasksController = class TasksController {
     tasksService;
     constructor(tasksService) {
@@ -35,9 +36,15 @@ let TasksController = class TasksController {
     deleteTask(id, user) {
         return this.tasksService.deleteTask(id, user);
     }
+    updateTask(id, updateTaskDto, user) {
+        return this.tasksService.updateTask(id, updateTaskDto, user);
+    }
     updateTaskStatus(id, updateTaskStatusDto, user) {
         const { status } = updateTaskStatusDto;
         return this.tasksService.updateTaskStatus(id, status, user);
+    }
+    updateTaskOrder(tasks, user) {
+        return this.tasksService.updateTaskOrder(tasks, user);
     }
 };
 exports.TasksController = TasksController;
@@ -68,6 +75,16 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], TasksController.prototype, "deleteTask", null);
 __decorate([
+    (0, common_1.Patch)('/:id'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Body)()),
+    __param(2, (0, get_user_decorator_1.GetUser)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, update_task_dto_1.UpdateTaskDto,
+        user_entity_1.User]),
+    __metadata("design:returntype", Promise)
+], TasksController.prototype, "updateTask", null);
+__decorate([
     (0, common_1.Patch)('/:id/status'),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
@@ -77,6 +94,14 @@ __decorate([
         user_entity_1.User]),
     __metadata("design:returntype", void 0)
 ], TasksController.prototype, "updateTaskStatus", null);
+__decorate([
+    (0, common_1.Post)('/order'),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, get_user_decorator_1.GetUser)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Array, user_entity_1.User]),
+    __metadata("design:returntype", Promise)
+], TasksController.prototype, "updateTaskOrder", null);
 exports.TasksController = TasksController = __decorate([
     (0, common_1.Controller)('tasks'),
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)()),
