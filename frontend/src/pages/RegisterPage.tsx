@@ -1,23 +1,29 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import api from '../api/axios'; 
+import api from '../api/axios';
 
 export const RegisterPage = () => {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState(''); // 1. Novo estado
   const [error, setError] = useState('');
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setError(''); 
+    setError('');
+
+    // 4. Validação de senha
+    if (password !== confirmPassword) {
+      setError('As senhas não coincidem.');
+      return; // Impede o envio do formulário
+    }
 
     try {
+      // O campo 'confirmPassword' não é enviado, apenas usado para validação
       await api.post('/auth/signup', { email, password });
-      
       navigate('/login');
-
     } catch (err: any) {
       if (err.response && err.response.data) {
         setError(err.response.data.message || 'Ocorreu um erro ao tentar registar.');
@@ -27,14 +33,24 @@ export const RegisterPage = () => {
     }
   };
 
+  // 3. Função para bloquear o "copia e cola"
+  const handlePaste = (e: React.ClipboardEvent) => {
+    e.preventDefault();
+    setError('A ação de colar não é permitida neste campo.');
+  };
+
   return (
-    <div className="min-h-screen bg-white flex flex-col justify-center items-center">
-      <div className="bg-gray-200 p-8 rounded-lg shadow-lg w-full max-w-md">
-        <h2 className="text-2xl font-bold text-black text-center mb-6">Criar Conta</h2>
-        
+    <div className="min-h-screen bg-slate-100 flex flex-col justify-center items-center p-4">
+      <div className="text-center mb-6">
+        <h1 className="text-4xl font-bold text-indigo-600">✅ Executiva</h1>
+        <p className="text-slate-500">Seu gerenciador de tarefas simples e eficiente.</p>
+      </div>
+      <div className="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md">
+        <h2 className="text-2xl font-bold text-slate-800 text-center mb-6">Criar Conta</h2>
+
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-gray-500 text-sm font-bold mb-2" htmlFor="email">
+            <label className="block text-slate-600 text-sm font-bold mb-2" htmlFor="email">
               Email
             </label>
             <input
@@ -42,12 +58,12 @@ export const RegisterPage = () => {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="shadow appearance-none border rounded w-full py-2 px-3 bg-white text-black leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow appearance-none border rounded w-full py-2 px-3 bg-white text-slate-800 leading-tight focus:outline-none focus:shadow-outline focus:border-indigo-500"
               required
             />
           </div>
-          <div className="mb-6">
-            <label className="block text-gray-500 text-sm font-bold mb-2" htmlFor="password">
+          <div className="mb-4"> 
+            <label className="block text-slate-600 text-sm font-bold mb-2" htmlFor="password">
               Senha
             </label>
             <input
@@ -55,7 +71,22 @@ export const RegisterPage = () => {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="shadow appearance-none border rounded w-full py-2 px-3 bg-white text-black mb-3 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow appearance-none border rounded w-full py-2 px-3 bg-white text-slate-800 leading-tight focus:outline-none focus:shadow-outline focus:border-indigo-500"
+              required
+            />
+          </div>
+          
+          <div className="mb-6">
+            <label className="block text-slate-600 text-sm font-bold mb-2" htmlFor="confirm-password">
+              Confirmar Senha
+            </label>
+            <input
+              id="confirm-password"
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              onPaste={handlePaste}
+              className="shadow appearance-none border rounded w-full py-2 px-3 bg-white text-slate-800 mb-3 leading-tight focus:outline-none focus:shadow-outline focus:border-indigo-500"
               required
             />
           </div>
@@ -65,16 +96,16 @@ export const RegisterPage = () => {
           <div className="flex items-center justify-between">
             <button
               type="submit"
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
+              className="bg-indigo-600 hover:bg-indigo-700 transition-colors text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
             >
               Registar
             </button>
           </div>
         </form>
 
-        <p className="text-center text-gray-500 text-sm mt-6">
+        <p className="text-center text-slate-500 text-sm mt-6">
           Já tem uma conta?{' '}
-          <Link to="/login" className="text-blue-500 hover:text-blue-700">
+          <Link to="/login" className="font-medium text-indigo-600 hover:text-indigo-800">
             Faça login
           </Link>
         </p>
